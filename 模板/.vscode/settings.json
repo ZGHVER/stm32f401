@@ -1,0 +1,26 @@
+{
+    "C_Cpp.errorSquiggles": "Disabled",
+    "files.associations": {
+        "*.m": "matlab",
+        "main.h": "c",
+        "stm32f4xx.h": "c",
+        "stm32f4xx_gpio.h": "c",
+        "stm32f4xx_rcc.h": "c",
+        "stm32f4xx_it.h": "c",
+        "delay.h": "c",
+        "core_cm4.h": "c",
+        "init.h": "c",
+        "stm32f4xx_exti.h": "c",
+        "exti.h": "c",
+        "stm32f4xx_syscfg.h": "c",
+        "oledfont.h": "c",
+        "stdlib.h": "c",
+        "oled.h": "c",
+        "arm_math.h": "c",
+        "arm_common_tables.h": "c",
+        "stm32f4xx_rng.h": "c",
+        "sys.h": "c",
+        "oled1.h": "c"
+    },
+    "C_Cpp.intelliSenseEngineFallback": "Enabled"
+}

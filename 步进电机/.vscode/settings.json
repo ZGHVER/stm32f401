@@ -1,0 +1,19 @@
+{
+    "C_Cpp.errorSquiggles": "Disabled",
+    "files.associations": {
+        "*.m": "matlab",
+        "main.h": "c",
+        "stm32f4xx.h": "c",
+        "stm32f4xx_gpio.h": "c",
+        "stm32f4xx_rcc.h": "c",
+        "stm32f4xx_it.h": "c",
+        "delay.h": "c",
+        "core_cm4.h": "c",
+        "init.h": "c",
+        "stm32f4xx_exti.h": "c",
+        "exti.h": "c",
+        "stm32f4xx_syscfg.h": "c",
+        "usart.h": "c",
+        "serial_key.h": "c"
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "C_Cpp.errorSquiggles": "Disabled",
+    "files.associations": {
+        "*.m": "matlab",
+        "main.h": "c",
+        "stm32f4xx.h": "c",
+        "stm32f4xx_gpio.h": "c",
+        "stm32f4xx_rcc.h": "c",
+        "stm32f4xx_it.h": "c",
+        "delay.h": "c",
+        "core_cm4.h": "c",
+        "init.h": "c",
+        "stm32f4xx_exti.h": "c",
+        "exti.h": "c",
+        "stm32f4xx_syscfg.h": "c",
+        "motc.h": "c",
+        "arm_math.h": "c",
+        "mpu6050.h": "c",
+        "myiic.h": "c",
+        "ecg.h": "c",
+        "servo.h": "c",
+        "serial_key.h": "c",
+        "stm32f4xx_conf.h": "c",
+        "se_keyfun.h": "c",
+        "oled.h": "c",
+        "crmera.h": "c",
+        "stm32f4xx_adc.h": "c"
+    }
+}

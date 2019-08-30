@@ -41,15 +41,15 @@ int main()
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
 	TIM_TimeBaseInitTypeDef tim2;
 	tim2.TIM_ClockDivision = TIM_CKD_DIV1;
-	tim2.TIM_CounterMode = TIM_CounterMode_Up;      //计数器模�?
-	tim2.TIM_Period = 2000 - 1;                    //重装载�?
-	tim2.TIM_Prescaler = 84 - 1;                   //分频系数
+	tim2.TIM_CounterMode = TIM_CounterMode_Up;      //������ģ??
+	tim2.TIM_Period = 2000 - 1;                    //��װ��??
+	tim2.TIM_Prescaler = 84 - 1;                   //��Ƶϵ��
 	TIM_TimeBaseInit(TIM2, &tim2);
 
-	TIM_OCInitTypeDef TIM2_oc_Init;                            //定时�?2频道PWM初始�?
-	TIM2_oc_Init.TIM_OCMode = TIM_OCMode_PWM1;                 //PWM模式选择
-	TIM2_oc_Init.TIM_OCPolarity = TIM_OCPolarity_High;         //PWM有效电平设置
-	TIM2_oc_Init.TIM_OutputState = TIM_OutputState_Enable;     //输出比较状�?
+	TIM_OCInitTypeDef TIM2_oc_Init;                            //��ʱ??2Ƶ��PWM��ʼ??
+	TIM2_oc_Init.TIM_OCMode = TIM_OCMode_PWM1;                 //PWMģʽѡ��
+	TIM2_oc_Init.TIM_OCPolarity = TIM_OCPolarity_High;         //PWM��Ч��ƽ����
+	TIM2_oc_Init.TIM_OutputState = TIM_OutputState_Enable;     //����Ƚ�״??
 	TIM_OC1Init(TIM2, &TIM2_oc_Init);
 	TIM_OC2Init(TIM2, &TIM2_oc_Init);
 	TIM_OC3Init(TIM2, &TIM2_oc_Init);
@@ -90,17 +90,17 @@ void timinit(){
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM11, ENABLE);
 	TIM_TimeBaseInitTypeDef tim11_BaseInit;
 	tim11_BaseInit.TIM_ClockDivision = TIM_CKD_DIV1;
-	tim11_BaseInit.TIM_CounterMode = TIM_CounterMode_Up;      //计数器模�?
-	tim11_BaseInit.TIM_Period = 1000000 / 100 - 1;            //重装载�?
-	tim11_BaseInit.TIM_Prescaler = 84 - 1;                   //分频系数
+	tim11_BaseInit.TIM_CounterMode = TIM_CounterMode_Up;      //������ģ??
+	tim11_BaseInit.TIM_Period = 1000000 / 100 - 1;            //��װ��??
+	tim11_BaseInit.TIM_Prescaler = 84 - 1;                   //��Ƶϵ��
 	TIM_TimeBaseInit(TIM11, &tim11_BaseInit);
 
 	TIM_ITConfig(TIM11, TIM_IT_Update, ENABLE);
 	NVIC_InitTypeDef tim11_NvicInit;
-	tim11_NvicInit.NVIC_IRQChannel = TIM1_TRG_COM_TIM11_IRQn;                       //中断频道
+	tim11_NvicInit.NVIC_IRQChannel = TIM1_TRG_COM_TIM11_IRQn;                       //�ж�Ƶ��
 	tim11_NvicInit.NVIC_IRQChannelCmd = ENABLE;
-	tim11_NvicInit.NVIC_IRQChannelPreemptionPriority = 1;     //抢占优先级，主优先级
-	tim11_NvicInit.NVIC_IRQChannelSubPriority = 0;            //提交优先级，次优先级
+	tim11_NvicInit.NVIC_IRQChannelPreemptionPriority = 1;     //��ռ���ȼ��������ȼ�
+	tim11_NvicInit.NVIC_IRQChannelSubPriority = 0;            //�ύ���ȼ��������ȼ�
 	NVIC_Init(&tim11_NvicInit);
 
 	TIM_Cmd(TIM11 ,ENABLE);
@@ -110,7 +110,7 @@ void TIM1_TRG_COM_TIM11_IRQHandler(){
 	static float32_t Kp = 175;    // 0-200
 	static float32_t Kd = 0;
 	char s[20];
-	float32_t pitch ,roll, yaw; 		//欧拉�?
+	float32_t pitch ,roll, yaw; 		//ŷ��??
 		static float32_t lastERR = 0;
 		mpu_dmp_get_data(&pitch, &roll, &yaw);
 		pitch += 0;

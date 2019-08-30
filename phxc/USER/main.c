@@ -1,17 +1,11 @@
 
 #include"stm32f4xx_gpio.h"
-#include"delay.h"
+#include"stm32f4xx_rcc.h"
+#include"misc.h"
 #include"arm_math.h"
+#include"stm32f4xx.h"
+#include"stm32f4xx_tim.h"
 #include"MOTc.h"
-#include"oled.h"
-
-
-#include "inv_mpu.h"
-#include "inv_mpu_dmp_motion_driver.h" 
-#include"dmpKey.h"
-#include"dmpmap.h"
-#include"mpu6050.h"
-#include"myiic.h"
 
 q15_t pidc[3], PIDR[3];
 void timinit();
@@ -47,15 +41,15 @@ int main()
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
 	TIM_TimeBaseInitTypeDef tim2;
 	tim2.TIM_ClockDivision = TIM_CKD_DIV1;
-	tim2.TIM_CounterMode = TIM_CounterMode_Up;      //计数器模式
-	tim2.TIM_Period = 2000 - 1;                    //重装载值
+	tim2.TIM_CounterMode = TIM_CounterMode_Up;      //计数器模�?
+	tim2.TIM_Period = 2000 - 1;                    //重装载�?
 	tim2.TIM_Prescaler = 84 - 1;                   //分频系数
 	TIM_TimeBaseInit(TIM2, &tim2);
 
-	TIM_OCInitTypeDef TIM2_oc_Init;                            //定时器2频道PWM初始化
+	TIM_OCInitTypeDef TIM2_oc_Init;                            //定时�?2频道PWM初始�?
 	TIM2_oc_Init.TIM_OCMode = TIM_OCMode_PWM1;                 //PWM模式选择
 	TIM2_oc_Init.TIM_OCPolarity = TIM_OCPolarity_High;         //PWM有效电平设置
-	TIM2_oc_Init.TIM_OutputState = TIM_OutputState_Enable;     //输出比较状态
+	TIM2_oc_Init.TIM_OutputState = TIM_OutputState_Enable;     //输出比较状�?
 	TIM_OC1Init(TIM2, &TIM2_oc_Init);
 	TIM_OC2Init(TIM2, &TIM2_oc_Init);
 	TIM_OC3Init(TIM2, &TIM2_oc_Init);
@@ -96,8 +90,8 @@ void timinit(){
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM11, ENABLE);
 	TIM_TimeBaseInitTypeDef tim11_BaseInit;
 	tim11_BaseInit.TIM_ClockDivision = TIM_CKD_DIV1;
-	tim11_BaseInit.TIM_CounterMode = TIM_CounterMode_Up;      //计数器模式
-	tim11_BaseInit.TIM_Period = 1000000 / 100 - 1;            //重装载值
+	tim11_BaseInit.TIM_CounterMode = TIM_CounterMode_Up;      //计数器模�?
+	tim11_BaseInit.TIM_Period = 1000000 / 100 - 1;            //重装载�?
 	tim11_BaseInit.TIM_Prescaler = 84 - 1;                   //分频系数
 	TIM_TimeBaseInit(TIM11, &tim11_BaseInit);
 
@@ -110,19 +104,13 @@ void timinit(){
 	NVIC_Init(&tim11_NvicInit);
 
 	TIM_Cmd(TIM11 ,ENABLE);
-
-
-
-	
-
-
-	
+		
 }
 void TIM1_TRG_COM_TIM11_IRQHandler(){
 	static float32_t Kp = 175;    // 0-200
 	static float32_t Kd = 0;
 	char s[20];
-	float32_t pitch ,roll, yaw; 		//欧拉角
+	float32_t pitch ,roll, yaw; 		//欧拉�?
 		static float32_t lastERR = 0;
 		mpu_dmp_get_data(&pitch, &roll, &yaw);
 		pitch += 0;

@@ -7,10 +7,10 @@
 
 #define OLED_MODE 	0 
 		    						  
-#define OLED_SCLK 	PAout(5)
-#define OLED_SDIN 	PAout(4)
-#define OLED_RST    PAout(3)	
-#define OLED_RS 	PAout(2)
+#define OLED_SCLK 	PCout(15)
+#define OLED_SDIN 	PBout(15)
+#define OLED_RST    PBout(14)	
+#define OLED_RS 	PBout(13)
 		     
 #define OLED_CMD  	0		
 #define OLED_DATA 	1		

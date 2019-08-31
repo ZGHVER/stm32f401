@@ -20,12 +20,12 @@ void OLED_Refresh_Gram(void)
 	}
 }
 #if OLED_MODE == 1 //8080����
-//ͨ��ƴ�յķ�����OLED���һ��?8λ����
-//data:Ҫ���������?
+//ͨ��ƴ�յķ�����OLED���һ��??8λ����
+//data:Ҫ���������??
 void OLED_Data_Out(u8 data)
 {
 	u16 dat = data & 0X0F;
-	GPIOC->ODR &= ~(0XF << 6); //���?6~9
+	GPIOC->ODR &= ~(0XF << 6); //���??6~9
 	GPIOC->ODR |= dat << 6;		 //D[3:0]-->PC[9:6]
 	GPIO_Write(GPIOC, dat << 6);
 	PCout(11) = (data >> 4) & 0X01; //D4
@@ -34,7 +34,7 @@ void OLED_Data_Out(u8 data)
 	PEout(6) = (data >> 7) & 0X01;	//D7
 }
 //��SSD1306д��һ���ֽڡ�
-//dat:Ҫд�������?/����
+//dat:Ҫд�������??/����
 //cmd:����/������? 0,��ʾ����;1,��ʾ����;
 void OLED_WR_Byte(u8 dat, u8 cmd)
 {
@@ -196,14 +196,20 @@ void OLED_ShowString(u8 x, u8 y, const u8 *p, u8 size)
 }
 void OLED_Init(void)
 {
-	GPIO_InitTypeDef ioA;
-	ioA.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5;
-	ioA.GPIO_Mode = GPIO_Mode_OUT;
-	ioA.GPIO_OType = GPIO_OType_PP;
-	ioA.GPIO_PuPd = GPIO_PuPd_UP;
-	ioA.GPIO_Speed = GPIO_Speed_50MHz;
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
-	GPIO_Init(GPIOA, &ioA);
+	//c5 b5 14 13
+	GPIO_InitTypeDef ioC;
+	ioC.GPIO_Pin = GPIO_Pin_15;
+	ioC.GPIO_Mode = GPIO_Mode_OUT;
+	ioC.GPIO_OType = GPIO_OType_PP;
+	ioC.GPIO_PuPd = GPIO_PuPd_UP;
+	ioC.GPIO_Speed = GPIO_Speed_50MHz;
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
+	GPIO_Init(GPIOC, &ioC);
+
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
+	ioC.GPIO_Pin = GPIO_Pin_15 | GPIO_Pin_14 | GPIO_Pin_13;
+	GPIO_Init(GPIOB, &ioC);
+
 	OLED_SDIN = 1;
 	OLED_SCLK = 1;
 	OLED_RS = 1;
@@ -223,7 +229,7 @@ void OLED_Init(void)
 
 	OLED_WR_Byte(0x40, OLED_CMD); //������ʾ��ʼ�� [5:0],����.
 
-	OLED_WR_Byte(0x8D, OLED_CMD); //��ɱ�����?
+	OLED_WR_Byte(0x8D, OLED_CMD); //��ɱ�����??
 	OLED_WR_Byte(0x14, OLED_CMD); //bit2������/�ر�
 	OLED_WR_Byte(0x20, OLED_CMD); //�����ڴ��ַģ�?
 	OLED_WR_Byte(0x02, OLED_CMD); //[1:0],00���е�ַģʽ;01���е�ַģʽ;10,ҳ��ַģʽ;Ĭ��10;
@@ -234,7 +240,7 @@ void OLED_Init(void)
 
 	OLED_WR_Byte(0x81, OLED_CMD); //�Աȶ�����
 	OLED_WR_Byte(0xEF, OLED_CMD); //1~255;Ĭ��0X7F (��������,Խ��Խ��)
-	OLED_WR_Byte(0xD9, OLED_CMD); //����Ԥ�������?
+	OLED_WR_Byte(0xD9, OLED_CMD); //����Ԥ�������??
 	OLED_WR_Byte(0xf1, OLED_CMD); //[3:0],PHASE 1;[7:4],PHASE 2;
 	OLED_WR_Byte(0xDB, OLED_CMD); //����VCOMH ��ѹ����
 	OLED_WR_Byte(0x30, OLED_CMD); //[6:4] 000,0.65*vcc;001,0.77*vcc;011,0.83*vcc;

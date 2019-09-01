@@ -7,7 +7,7 @@
 
 #define JDY_UART                USART2
 #define JDY_UART_CLKSouce       RCC_APB1Periph_USART2
-#define JDY_UART_BoundRate      115200
+#define JDY_UART_BoundRate      19200 
 
 #define JDY_UART_TX_GPIO        GPIOA
 #define JDY_GPIO_TX_CLKSouce    RCC_AHB1Periph_GPIOA

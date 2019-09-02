@@ -21,21 +21,28 @@
 
 #define JDY_TX_RX_AF            GPIO_AF_USART2
 
-#define JDY_SET_GPIO            GPIOB
-#define JDY_GPIO_SET_CLK        RCC_AHB1Periph_GPIOB
-#define JDY_SETPin              GPIO_Pin_2
+#define JDY_SET_GPIO            GPIOA
+#define JDY_GPIO_SET_CLK        RCC_AHB1Periph_GPIOA
+#define JDY_SETPin              GPIO_Pin_14
 
-#define JDY_CS_GPIO             GPIOB
-#define JDY_GPIO_CS_CLK         RCC_AHB1Periph_GPIOB
-#define JDY_CSPin               GPIO_Pin_3
+#define JDY_CS_GPIO             GPIOA
+#define JDY_GPIO_CS_CLK         RCC_AHB1Periph_GPIOA
+#define JDY_CSPin               GPIO_Pin_15
 
-#define JDY_SET                 PBout(2)         
-#define JDY_CS                  PBout(3)     
+#define JDY_BoundRate_1200      1
+#define JDY_BoundRate_2400      2
+#define JDY_BoundRate_4800      3
+#define JDY_BoundRate_9600      4
+#define JDY_BoundRate_14400     5
+#define JDY_BoundRate_19200     6
+
+#define JDY_SET                 PAout(2)         
+#define JDY_CS                  PAout(3)     
 
 
 
 void JDY_Init();
-
+void JDY_Set_BoundRate(uint8_t boundrate_code);
 
 
 

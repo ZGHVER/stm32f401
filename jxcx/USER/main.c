@@ -11,7 +11,6 @@ int main(){
     ALL_init();
     OLED_Clear();
 
-
     GPIO_InitTypeDef ioC;
     ioC.GPIO_Pin = GPIO_Pin_13;
     ioC.GPIO_Mode = GPIO_Mode_OUT;
@@ -21,9 +20,15 @@ int main(){
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
     GPIO_Init(GPIOC, &ioC);
     delay_ms(1000);
-    JDY_Set_BoundRate(JDY_BoundRate_19200);
+    JDY_CS = 0;
+    JDY_SET = 0;
+    uint8_t k = JDY_Set_BaundRate(JDY_BaundRate_9600);
+    if(k == 0){
+        OLED_ShowString(0,0,"OK", 12);
+    }
     while(1){
         OLED_Refresh_Gram();
+        delay_ms(100);
     }
 }
 

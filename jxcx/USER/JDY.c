@@ -1,14 +1,11 @@
+
 #include"JDY.h"
 #include"oled.h"
 // VCC RXD TXD SET CS GND 
-__STATIC_INLINE void JDY_Pin_Init();
-__STATIC_INLINE void JDY_UART_Init();
 
-char s[20];
-void JDY_Init(){
-    JDYPin_Init();
-    JDY_UARTInit();
-}
+volatile uint8_t temp_String[40];
+volatile uint8_t temp_Index = 0;
+volatile uint8_t isResFinish = 0;
 
 __STATIC_INLINE void JDY_Pin_Init(){
     GPIO_InitTypeDef InitTYpe;
@@ -44,7 +41,7 @@ __STATIC_INLINE void JDY_UART_Init(){
     GPIO_PinAFConfig(JDY_UART_TX_GPIO, JDY_TXPinSouce, JDY_TX_RX_AF);
 
     USART_InitTypeDef Usart_init;
-    Usart_init.USART_BaudRate = JDY_UART_BoundRate;                             //波特率
+    Usart_init.USART_BaudRate = JDY_UART_BaundRate;                             //波特率
     Usart_init.USART_HardwareFlowControl = USART_HardwareFlowControl_None;      //硬件流
     Usart_init.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
     Usart_init.USART_Parity = USART_Parity_No;                                  //奇偶校验
@@ -63,31 +60,113 @@ __STATIC_INLINE void JDY_UART_Init(){
     NVIC_Init(&USART2_NvicInit);
     
     USART_Init(JDY_UART, &Usart_init);
+    USART_Cmd(USART2, ENABLE);
 
 }
 
+void JDY_Init(){
+    JDY_Pin_Init();
+    JDY_UART_Init();
+}
 
+__STATIC_INLINE void JDY_SendString(uint8_t s[], uint8_t s_size){
+    for(uint8_t i = 0; i < s_size; i++){
+        USART_SendData(JDY_UART, s[i]);
+        while(!USART_GetFlagStatus(JDY_UART, USART_FLAG_TC));
+    }
+}
 
-
-void JDY_Set_BoundRate(uint8_t boundrate_code){
+uint8_t JDY_Set_BaundRate(uint8_t BaundRate_code){
     JDY_CS = 0;
     JDY_SET = 0;
-    sprintf(s, "AT+BAUD<%d>\r\n", boundrate_code);
-    for(u8 i = 0; i < 20; i++){
-        USART_SendData(JDY_UART, s[i]);
-        if(s[i] == '\n')
-            break;
-    }
+
+    JDY_SendString(BaundRate, C_SizeOf_BaundRate);
+    USART_SendData(JDY_UART, BaundRate_code);
+    while(!USART_GetFlagStatus(JDY_UART, USART_FLAG_TC));
+    JDY_SendString("\r\n", 2);
+    JDY_CS = 0;
+    JDY_SET = 1;
+
+
+}
+
+void JDY_Set_RFID(uint8_t RFID_code[]){
+    JDY_CS = 0;
+    JDY_SET = 0;
+    JDY_SendString(RFID, C_SizeOf_RFID);
+    JDY_SendString(RFID_code, 4);
+    JDY_SendString("\r\n", 2);
+    JDY_CS = 0;
+    JDY_SET = 1;
+
+}
+
+void JDY_Set_DVID(uint8_t DVID_code[]){
+    JDY_CS = 0;
+    JDY_SET = 0;
+    JDY_SendString(DVID, C_SizeOf_DVID);
+    JDY_SendString(DVID_code, 4);
+    JDY_SendString("\r\n", 2);
+    JDY_CS = 0;
+    JDY_SET = 1;
+
+}
+
+void JDY_Set_RFC(uint8_t RFC_code){
+    JDY_CS = 0;
+    JDY_SET = 0;
+    JDY_SendString(RFC, C_SizeOf_RFC);
+    JDY_SendString(RFC_code, 3);
+    JDY_SendString("\r\n", 2);
+    JDY_CS = 0;
+    JDY_SET = 1;
+
+}
+
+void JDY_Set_POWE(uint8_t POWE_code){
+    JDY_CS = 0;
+    JDY_SET = 0;
+    JDY_SendString(POWE, C_SizeOf_POWE);
+    USART_SendData(JDY_UART, POWE_code);
+    while(!USART_GetFlagStatus(JDY_UART, USART_FLAG_TC));
+    JDY_SendString("\r\n", 2);
+    JDY_CS = 0;
+    JDY_SET = 1;
+
+}
+
+void JDY_Set_CLSS(uint8_t CLSS_code){
+    JDY_CS = 0;
+    JDY_SET = 0;
+    JDY_SendString(CLSS, C_SizeOf_CLSS);
+    USART_SendData(JDY_UART, CLSS_code);
+    while(!USART_GetFlagStatus(JDY_UART, USART_FLAG_TC));
+    JDY_SendString("\r\n", 2);
     JDY_CS = 0;
     JDY_SET = 1;
 }
 
 __STATIC_INLINE void JDY_RXHandler(){
-    static uint8_t c = 0;
+    static uint8_t last = 0;
+    static uint8_t ll = 0;
     uint16_t ResData = USART_ReceiveData(JDY_UART);
-    OLED_ShowChar(0, c, (uint8_t)ResData, 12, 1);
-    c += 8;
-    
+    if(ResData == '\r')
+        last = 1;
+    else if(last == 1){
+        if(ResData == '\n'){
+            isResFinish = 1;
+            last = 0;
+        }
+        else{
+            isResFinish = 2;
+            last = 0;
+            temp_Index = 0;
+        }
+    }else{ 
+        temp_String[temp_Index++] = ResData;
+        OLED_ShowChar(temp_Index * 8, 0, ResData, 12, 1);
+        temp_Index++;
+    }
 }
 
 void USART2_IRQHandler(){

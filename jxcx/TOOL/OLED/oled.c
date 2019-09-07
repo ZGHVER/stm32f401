@@ -19,34 +19,6 @@ void OLED_Refresh_Gram(void)
 			OLED_WR_Byte(OLED_GRAM[n][i], OLED_DATA);
 	}
 }
-#if OLED_MODE == 1 //8080����
-//ͨ��ƴ�յķ�����OLED���һ��??8λ����
-//data:Ҫ���������??
-void OLED_Data_Out(u8 data)
-{
-	u16 dat = data & 0X0F;
-	GPIOC->ODR &= ~(0XF << 6); //���??6~9
-	GPIOC->ODR |= dat << 6;		 //D[3:0]-->PC[9:6]
-	GPIO_Write(GPIOC, dat << 6);
-	PCout(11) = (data >> 4) & 0X01; //D4
-	PBout(6) = (data >> 5) & 0X01;	//D5
-	PEout(5) = (data >> 6) & 0X01;	//D6
-	PEout(6) = (data >> 7) & 0X01;	//D7
-}
-//��SSD1306д��һ���ֽڡ�
-//dat:Ҫд�������??/����
-//cmd:����/������? 0,��ʾ����;1,��ʾ����;
-void OLED_WR_Byte(u8 dat, u8 cmd)
-{
-	OLED_Data_Out(dat);
-	OLED_RS = cmd;
-	OLED_CS = 0;
-	OLED_WR = 0;
-	OLED_WR = 1;
-	OLED_CS = 1;
-	OLED_RS = 1;
-}
-#else
 
 void OLED_WR_Byte(u8 dat, u8 cmd)
 {
@@ -64,7 +36,6 @@ void OLED_WR_Byte(u8 dat, u8 cmd)
 	}
 	OLED_RS = 1;
 }
-#endif
 
 void OLED_Display_On(void)
 {
@@ -194,6 +165,7 @@ void OLED_ShowString(u8 x, u8 y, const u8 *p, u8 size)
 		p++;
 	}
 }
+
 void OLED_Init(void)
 {
 	//c5 b5 14 13

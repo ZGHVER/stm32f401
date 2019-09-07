@@ -53,8 +53,8 @@ static const uint8_t C_SizeOf_POWE = 7;
 static const uint8_t CLSS[] = {'A', 'T', '+', 'C', 'L', 'S', 'S'}; 
 static const uint8_t C_SizeOf_CLSS = 7;
 
-void JDY_Init();
-uint8_t JDY_Set_BaundRate(uint8_t BaundRate_code);
+void JDY_Init(void);
+void JDY_Set_BaundRate(uint8_t BaundRate_code);
 void JDY_Set_RFID(uint8_t[]);
 void JDY_Set_DVID(uint8_t[]);
 void JDY_Set_RFC(uint8_t);

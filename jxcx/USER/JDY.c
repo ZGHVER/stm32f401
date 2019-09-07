@@ -76,24 +76,22 @@ __STATIC_INLINE void JDY_SendString(uint8_t s[], uint8_t s_size){
     }
 }
 
-uint8_t JDY_Set_BaundRate(uint8_t BaundRate_code){
+void JDY_Set_BaundRate(uint8_t BaundRate_code){
     JDY_CS = 0;
     JDY_SET = 0;
 
-    JDY_SendString(BaundRate, C_SizeOf_BaundRate);
+    JDY_SendString((uint8_t*)BaundRate, C_SizeOf_BaundRate);
     USART_SendData(JDY_UART, BaundRate_code);
     while(!USART_GetFlagStatus(JDY_UART, USART_FLAG_TC));
     JDY_SendString("\r\n", 2);
     JDY_CS = 0;
     JDY_SET = 1;
-
-
 }
 
 void JDY_Set_RFID(uint8_t RFID_code[]){
     JDY_CS = 0;
     JDY_SET = 0;
-    JDY_SendString(RFID, C_SizeOf_RFID);
+    JDY_SendString((uint8_t*)RFID, C_SizeOf_RFID);
     JDY_SendString(RFID_code, 4);
     JDY_SendString("\r\n", 2);
     JDY_CS = 0;
@@ -104,7 +102,7 @@ void JDY_Set_RFID(uint8_t RFID_code[]){
 void JDY_Set_DVID(uint8_t DVID_code[]){
     JDY_CS = 0;
     JDY_SET = 0;
-    JDY_SendString(DVID, C_SizeOf_DVID);
+    JDY_SendString((uint8_t*)DVID, C_SizeOf_DVID);
     JDY_SendString(DVID_code, 4);
     JDY_SendString("\r\n", 2);
     JDY_CS = 0;
@@ -115,8 +113,8 @@ void JDY_Set_DVID(uint8_t DVID_code[]){
 void JDY_Set_RFC(uint8_t RFC_code){
     JDY_CS = 0;
     JDY_SET = 0;
-    JDY_SendString(RFC, C_SizeOf_RFC);
-    JDY_SendString(RFC_code, 3);
+    JDY_SendString((uint8_t*)RFC, C_SizeOf_RFC);
+    JDY_SendString(&RFC_code, 3);
     JDY_SendString("\r\n", 2);
     JDY_CS = 0;
     JDY_SET = 1;
@@ -126,7 +124,7 @@ void JDY_Set_RFC(uint8_t RFC_code){
 void JDY_Set_POWE(uint8_t POWE_code){
     JDY_CS = 0;
     JDY_SET = 0;
-    JDY_SendString(POWE, C_SizeOf_POWE);
+    JDY_SendString((uint8_t*)POWE, C_SizeOf_POWE);
     USART_SendData(JDY_UART, POWE_code);
     while(!USART_GetFlagStatus(JDY_UART, USART_FLAG_TC));
     JDY_SendString("\r\n", 2);
@@ -138,7 +136,7 @@ void JDY_Set_POWE(uint8_t POWE_code){
 void JDY_Set_CLSS(uint8_t CLSS_code){
     JDY_CS = 0;
     JDY_SET = 0;
-    JDY_SendString(CLSS, C_SizeOf_CLSS);
+    JDY_SendString((uint8_t*)CLSS, C_SizeOf_CLSS);
     USART_SendData(JDY_UART, CLSS_code);
     while(!USART_GetFlagStatus(JDY_UART, USART_FLAG_TC));
     JDY_SendString("\r\n", 2);
@@ -148,7 +146,6 @@ void JDY_Set_CLSS(uint8_t CLSS_code){
 
 __STATIC_INLINE void JDY_RXHandler(){
     static uint8_t last = 0;
-    static uint8_t ll = 0;
     uint16_t ResData = USART_ReceiveData(JDY_UART);
     if(ResData == '\r')
         last = 1;

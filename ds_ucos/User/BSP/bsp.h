@@ -75,10 +75,6 @@
 
 #include "stm32f4xx.h"
 
-#include "bsp_led.h" 
-#include "bsp_key.h" 
-#include "./usart/bsp_debug_usart.h"
-
 /*
 *********************************************************************************************************
 *                                               CONSTANTS

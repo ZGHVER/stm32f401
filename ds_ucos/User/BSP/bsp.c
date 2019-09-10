@@ -245,11 +245,6 @@
 
 void  BSP_Init (void)
 {
-	LED_GPIO_Config ();            //初始化 LED    
-	
-  Debug_USART_Config();      //初始化 串口 
-  
-  Key_GPIO_Config();       //初始化 按键 
 }
 
 

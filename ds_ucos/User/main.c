@@ -1,61 +1,83 @@
-/**
-  ******************************************************************************
-  * @file    main.c
-  * @author  fire
-  * @version V1.0
-  * @date    2015-xx-xx
-  * @brief   ï¿½ï¿½ï¿½Ú½Ó·ï¿½ï¿½ï¿½ï¿½Ô£ï¿½ï¿½ï¿½ï¿½Ú½ï¿½ï¿½Õµï¿½ï¿½ï¿½ï¿½Ýºï¿½ï¿½ï¿½ï¿½Ï»Ø´ï¿½ï¿½ï¿½
-  ******************************************************************************
-  * @attention
-  *
-  * Êµï¿½ï¿½Æ½Ì¨:ï¿½ï¿½ï¿½ï¿½  STM32 F407 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-  * ï¿½ï¿½Ì³    :http://www.firebbs.cn
-  * ï¿½Ô±ï¿½    :https://fire-stm32.taobao.com
-  *
-  ******************************************************************************
-  */
+
   
 #include "stm32f4xx.h"
 #include "bsp.h"
 #include "os.h"
-/**
-  * @brief  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-  * @param  ï¿½ï¿½
-  * @retval ï¿½ï¿½
-  */
-	void init_task(void* args);
-	OS_ERR P = OS_ERR_NONE;
+
+#define init_TSIZE 128
+CPU_STK init_task_STK[init_TSIZE];
+OS_TCB TCB_init_task;
+void init_task(void* args);
+
+#define LED_TSIZE 128
+CPU_STK LED_task_STK[LED_TSIZE];
+OS_TCB TCB_LED_task;
+void LED_task(void* args);
+
+
+
 int main(void)
 {
-  
-  CPU_SR_ALLOC();
+  OS_ERR P;
   CPU_Init();
+  BSP_Tick_Init();
   OSInit(&P);
-
-  OS_TCB init_tasktcb;
-  int stk_size = 128;
-  CPU_STK stk[stk_size];
   OSTaskCreate(
-      (  OS_TCB*   )&init_tasktcb,      //ä»»åŠ¡æŽ§åˆ¶å—
-      ( CPU_CHAR*  )"task_name",    //ä»»åŠ¡å
-      (OS_TASK_PTR )init_task,      //ä»»åŠ¡å‡½æ•°æŒ‡é’ˆ
-      (   void*    )0,           //é¦–æ¬¡è¿è¡Œæ—¶ä¼ é€’çš„å‚æ•°
-      (  OS_PRIO   )10,          //ä»»åŠ¡ä¼˜å…ˆçº§
-      (  CPU_STK*  )&stk[0],          //ä»»åŠ¡å †æ ˆåŸºåœ°å€
-      (CPU_STK_SIZE)stk_size / 10,     //å¯ç”¨æœ€å¤§å †æ ˆç©ºé—´
-      (CPU_STK_SIZE)stk_size,     //ä»»åŠ¡å †æ ˆå¤§å°
-      ( OS_MSG_QTY )0,       //ä»»åŠ¡å¯æŽ¥æ”¶çš„æœ€å¤§æ¶ˆæ¯æ•°
-      (  OS_TICK   )0,          //åœ¨ä»»åŠ¡ä¹‹é—´å¾ªçŽ¯æ—¶çš„æ—¶é—´ç‰‡çš„æ—¶é—´é‡ï¼ˆä»¥åˆ»åº¦è¡¨ç¤ºï¼‰æŒ‡å®š0ä»¥ä½¿ç”¨é»˜è®¤å€¼
-      (   void*    )0,            //TCBæ‰©å±•æŒ‡é’ˆ
-      (  OS_OPT    )OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR, //åŒ…å«æœ‰å…³ä»»åŠ¡è¡Œä¸ºçš„å…¶ä»–ä¿¡æ¯ï¼ˆæˆ–é€‰é¡¹ï¼‰
-      (  OS_ERR*   )P          //é”™è¯¯å˜é‡
+      (  OS_TCB*   )&TCB_init_task,                                   //ÈÎÎñ¿ØÖÆ¿é
+      ( CPU_CHAR*  )"inittask",                                  //ÈÎÎñÃû
+      (OS_TASK_PTR )init_task,                                     //ÈÎÎñº¯ÊýÖ¸Õë
+      (   void*    )0,                                          //Ê×´ÎÔËÐÐÊ±´«µÝµÄ²ÎÊý
+      (  OS_PRIO   )10,                                         //ÈÎÎñÓÅÏÈ¼¶
+      (  CPU_STK*  )&init_task_STK[0],                                  //ÈÎÎñ¶ÑÕ»»ùµØÖ·
+      (CPU_STK_SIZE)init_TSIZE / 10,                            //¿ÉÓÃ×î´ó¶ÑÕ»¿Õ¼ä
+      (CPU_STK_SIZE)init_TSIZE,                                 //ÈÎÎñ¶ÑÕ»´óÐ¡
+      ( OS_MSG_QTY )10,                                         //ÈÎÎñ¿É½ÓÊÕµÄ×î´óÏûÏ¢Êý
+      (  OS_TICK   )0,                                          //ÔÚÈÎÎñÖ®¼äÑ­»·Ê±µÄÊ±¼äÆ¬µÄÊ±¼äÁ¿£¨ÒÔ¿Ì¶È±íÊ¾£©Ö¸¶¨0ÒÔÊ¹ÓÃÄ¬ÈÏÖµ
+      (   void*    )0,                                          //TCBÀ©Õ¹Ö¸Õë
+      (  OS_OPT    )OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR,  //°üº¬ÓÐ¹ØÈÎÎñÐÐÎªµÄÆäËûÐÅÏ¢£¨»òÑ¡Ïî£©
+      (  OS_ERR*   )&P                                      //´íÎó±äÁ¿
   );
-
+			P = P;
   OSStart(&P);
 }
 
 void init_task(void* args){
-	while(1);
+  OS_ERR P;
+  //BSP_Init();
+  GPIO_InitTypeDef ioC;
+  ioC.GPIO_Pin = GPIO_Pin_13;
+  ioC.GPIO_Mode = GPIO_Mode_OUT;
+  ioC.GPIO_OType = GPIO_OType_PP;
+  ioC.GPIO_PuPd = GPIO_PuPd_UP;
+  ioC.GPIO_Speed = GPIO_Speed_50MHz;
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
+  GPIO_Init(GPIOC, &ioC);
+
+  OSTaskCreate(
+      (  OS_TCB*   )&TCB_LED_task,                                   //ÈÎÎñ¿ØÖÆ¿é
+      ( CPU_CHAR*  )"task_name",                                  //ÈÎÎñÃû
+      (OS_TASK_PTR )LED_task,                                        //ÈÎÎñº¯ÊýÖ¸Õë
+      (   void*    )0,                                          //Ê×´ÎÔËÐÐÊ±´«µÝµÄ²ÎÊý
+      (  OS_PRIO   )10,                                         //ÈÎÎñÓÅÏÈ¼¶
+      (  CPU_STK*  )&LED_task_STK[0],                                  //ÈÎÎñ¶ÑÕ»»ùµØÖ·
+      (CPU_STK_SIZE)LED_TSIZE / 10,                            //¿ÉÓÃ×î´ó¶ÑÕ»¿Õ¼ä
+      (CPU_STK_SIZE)LED_TSIZE,                                 //ÈÎÎñ¶ÑÕ»´óÐ¡
+      ( OS_MSG_QTY )5,                                         //ÈÎÎñ¿É½ÓÊÕµÄ×î´óÏûÏ¢Êý
+      (  OS_TICK   )0,                                          //ÔÚÈÎÎñÖ®¼äÑ­»·Ê±µÄÊ±¼äÆ¬µÄÊ±¼äÁ¿£¨ÒÔ¿Ì¶È±íÊ¾£©Ö¸¶¨0ÒÔÊ¹ÓÃÄ¬ÈÏÖµ
+      (   void*    )0,                                          //TCBÀ©Õ¹Ö¸Õë
+      (  OS_OPT    )OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR,  //°üº¬ÓÐ¹ØÈÎÎñÐÐÎªµÄÆäËûÐÅÏ¢£¨»òÑ¡Ïî£©
+      (  OS_ERR*   )&P                                      //´íÎó±äÁ¿
+  );
+
+  OSTaskDel(0, &P);
+}
+
+void LED_task(void* args){
+  OS_ERR P;
+  while(1){
+    OSTimeDly(1000, OS_OPT_TIME_DLY, &P);
+    GPIOC->ODR ^= GPIO_Pin_13;
+  }
 }
 
 

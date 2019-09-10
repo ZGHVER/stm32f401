@@ -821,11 +821,6 @@
           <GroupName>BSP</GroupName>
           <Files>
             <File>
-              <FileName>bsp_led.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\BSP\led\bsp_led.c</FilePath>
-            </File>
-            <File>
               <FileName>bsp.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\BSP\bsp.c</FilePath>
@@ -834,16 +829,6 @@
               <FileName>bsp.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\User\BSP\bsp.h</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_debug_usart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\BSP\usart\bsp_debug_usart.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_key.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\BSP\key\bsp_key.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -70,26 +70,26 @@ ARM Macro Assembler    Page 2
 
 
    41 00000000         
-   42 00000000 00000400 
+   42 00000000 00000800 
                        Stack_Size
-                               EQU              0x00000400
+                               EQU              0x00000800
    43 00000000         
    44 00000000                 AREA             STACK, NOINIT, READWRITE, ALIGN
 =3
    45 00000000         Stack_Mem
                                SPACE            Stack_Size
-   46 00000400         __initial_sp
-   47 00000400         
-   48 00000400         
-   49 00000400         ; <h> Heap Configuration
-   50 00000400         ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
-   51 00000400         ; </h>
-   52 00000400         
-   53 00000400 00000200 
+   46 00000800         __initial_sp
+   47 00000800         
+   48 00000800         
+   49 00000800         ; <h> Heap Configuration
+   50 00000800         ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
+   51 00000800         ; </h>
+   52 00000800         
+   53 00000800 00000200 
                        Heap_Size
                                EQU              0x00000200
-   54 00000400         
-   55 00000400                 AREA             HEAP, NOINIT, READWRITE, ALIGN=
+   54 00000800         
+   55 00000800                 AREA             HEAP, NOINIT, READWRITE, ALIGN=
 3
    56 00000000         __heap_base
    57 00000000         Heap_Mem
@@ -920,7 +920,7 @@ ates\arm\startup_stm32f40xx.s
    Uses
       None
 Comment: Stack_Mem unused
-__initial_sp 00000400
+__initial_sp 00000800
 
 Symbol: __initial_sp
    Definitions
@@ -2277,7 +2277,7 @@ ates\arm\startup_stm32f40xx.s
       At line 57 in file ..\..\Libraries\CMSIS\Device\ST\STM32F4xx\Source\Templ
 ates\arm\startup_stm32f40xx.s
 Comment: Heap_Size used once
-Stack_Size 00000400
+Stack_Size 00000800
 
 Symbol: Stack_Size
    Definitions

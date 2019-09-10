@@ -355,7 +355,7 @@ void  OSTaskCreate (OS_TCB        *p_tcb,
         if ((opt & OS_OPT_TASK_STK_CLR) != (OS_OPT)0) {     /* See if stack needs to be cleared                       */
             p_sp = p_stk_base;
             for (i = 0u; i < stk_size; i++) {               /* Stack grows from HIGH to LOW memory                    */
-               *p_sp = (CPU_STK)0;                          /* Clear from bottom of stack and up!                     */
+							*p_sp = (CPU_STK)0;                          /* Clear from bottom of stack and up!                     */
                 p_sp++;
             }
         }

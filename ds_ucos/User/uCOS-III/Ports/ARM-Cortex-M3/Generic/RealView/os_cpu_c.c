@@ -1,3 +1,4 @@
+#include"stm32f4xx_tim.h"
 /*
 *********************************************************************************************************
 *                                                uC/OS-III
@@ -367,11 +368,29 @@ void  OS_CPU_SysTickHandler (void)
 
     CPU_CRITICAL_ENTER();
     OSIntNestingCtr++;                                      /* Tell uC/OS-III that we are starting an ISR             */
+    GPIOC->ODR ^= GPIOC->ODR ^= GPIO_Pin_13;
     CPU_CRITICAL_EXIT();
 
     OSTimeTick();                                           /* Call uC/OS-III's OSTimeTick()                          */
 
     OSIntExit();                                            /* Tell uC/OS-III that we are leaving the ISR             */
+    
+}
+
+void TIM5_IRQHandler(){
+    CPU_SR_ALLOC();
+
+
+    CPU_CRITICAL_ENTER();
+    OSIntNestingCtr++;                                      /* Tell uC/OS-III that we are starting an ISR             */
+    GPIOC->ODR ^= GPIOC->ODR ^= GPIO_Pin_13;
+    CPU_CRITICAL_EXIT();
+
+    OSTimeTick();                                           /* Call uC/OS-III's OSTimeTick()                          */
+
+    OSIntExit();  
+    TIM_ClearITPendingBit(TIM5, TIM_IT_Update);
+    
 }
 
 

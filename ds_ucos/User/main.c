@@ -23,21 +23,24 @@ int main(void)
   BSP_Tick_Init();
   OSInit(&P);
   OSTaskCreate(
-      (  OS_TCB*   )&TCB_init_task,                                   //任务控制块
-      ( CPU_CHAR*  )"inittask",                                  //任务名
-      (OS_TASK_PTR )init_task,                                     //任务函数指针
+      (  OS_TCB*   )&TCB_init_task,                             //任务控制块
+      ( CPU_CHAR*  )"inittask",                                 //任务名
+      (OS_TASK_PTR )init_task,                                  //任务函数指针
       (   void*    )0,                                          //首次运行时传递的参数
       (  OS_PRIO   )10,                                         //任务优先级
-      (  CPU_STK*  )&init_task_STK[0],                                  //任务堆栈基地址
+      (  CPU_STK*  )&init_task_STK[0],                          //任务堆栈基地址
       (CPU_STK_SIZE)init_TSIZE / 10,                            //可用最大堆栈空间
       (CPU_STK_SIZE)init_TSIZE,                                 //任务堆栈大小
       ( OS_MSG_QTY )10,                                         //任务可接收的最大消息数
       (  OS_TICK   )0,                                          //在任务之间循环时的时间片的时间量（以刻度表示）指定0以使用默认值
       (   void*    )0,                                          //TCB扩展指针
       (  OS_OPT    )OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR,  //包含有关任务行为的其他信息（或选项）
-      (  OS_ERR*   )&P                                      //错误变量
+      (  OS_ERR*   )&P                                          //错误变量
   );
-			P = P;
+
+  if(P != OS_ERR_NONE)
+    while(1);
+
   OSStart(&P);
 }
 
@@ -54,21 +57,24 @@ void init_task(void* args){
   GPIO_Init(GPIOC, &ioC);
 
   OSTaskCreate(
-      (  OS_TCB*   )&TCB_LED_task,                                   //任务控制块
-      ( CPU_CHAR*  )"task_name",                                  //任务名
-      (OS_TASK_PTR )LED_task,                                        //任务函数指针
+      (  OS_TCB*   )&TCB_LED_task,                              //任务控制块
+      ( CPU_CHAR*  )"task_name",                                //任务名
+      (OS_TASK_PTR )LED_task,                                   //任务函数指针
       (   void*    )0,                                          //首次运行时传递的参数
       (  OS_PRIO   )10,                                         //任务优先级
-      (  CPU_STK*  )&LED_task_STK[0],                                  //任务堆栈基地址
-      (CPU_STK_SIZE)LED_TSIZE / 10,                            //可用最大堆栈空间
-      (CPU_STK_SIZE)LED_TSIZE,                                 //任务堆栈大小
-      ( OS_MSG_QTY )5,                                         //任务可接收的最大消息数
+      (  CPU_STK*  )&LED_task_STK[0],                           //任务堆栈基地址
+      (CPU_STK_SIZE)LED_TSIZE / 10,                             //可用最大堆栈空间
+      (CPU_STK_SIZE)LED_TSIZE,                                  //任务堆栈大小
+      ( OS_MSG_QTY )5,                                          //任务可接收的最大消息数
       (  OS_TICK   )0,                                          //在任务之间循环时的时间片的时间量（以刻度表示）指定0以使用默认值
       (   void*    )0,                                          //TCB扩展指针
       (  OS_OPT    )OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR,  //包含有关任务行为的其他信息（或选项）
-      (  OS_ERR*   )&P                                      //错误变量
+      (  OS_ERR*   )&P                                          //错误变量
   );
 
+  if(P != OS_ERR_NONE)
+    while(1);
+    
   OSTaskDel(0, &P);
 }
 

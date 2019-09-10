@@ -1,5 +1,9 @@
 #include "STEM.h"
 
+static __IO uint16_t tim3_counte = 0;
+static uint16_t tim3_t = 2048;
+static __IO uint16_t tim4_counte = 0;
+static uint16_t tim4_t = 1500;
 
 void STEPM_Init(){
     GPIO_InitTypeDef ioB;
@@ -11,11 +15,15 @@ void STEPM_Init(){
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
     GPIO_Init(GPIOB, &ioB);
 
+    GPIO_PinAFConfig(GPIOB, GPIO_PinSource5, GPIO_AF_TIM3);
+    GPIO_PinAFConfig(GPIOB, GPIO_PinSource6, GPIO_AF_TIM4);
+
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
     TIM_TimeBaseInitTypeDef tim3;
     tim3.TIM_ClockDivision = TIM_CKD_DIV1;
     tim3.TIM_CounterMode = TIM_CounterMode_Up;      //计数器模式
-    tim3.TIM_Period = 1000;                         //重装载值
+    tim3.TIM_Period = 2000;                         //重装载值
     tim3.TIM_Prescaler = 84 - 1;                   //分频系数
     TIM_TimeBaseInit(TIM3, &tim3);  
     TIM_TimeBaseInit(TIM4, &tim3);  
@@ -38,4 +46,39 @@ void STEPM_Init(){
     TIM_OC2PreloadConfig(TIM3, TIM_OCPreload_Enable);
     TIM_ARRPreloadConfig(TIM3, ENABLE);
     TIM_SetCompare2(TIM3, 1000);
+
+    TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
+    TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
+
+    NVIC_InitTypeDef tim3_NvicInit;
+    tim3_NvicInit.NVIC_IRQChannel = TIM3_IRQn;                       //中断频道
+    tim3_NvicInit.NVIC_IRQChannelCmd = ENABLE;
+    tim3_NvicInit.NVIC_IRQChannelPreemptionPriority = 2;     //抢占优先级，主优先级
+    tim3_NvicInit.NVIC_IRQChannelSubPriority = 0;            //提交优先级，次优先级
+    NVIC_Init(&tim3_NvicInit);
+
+    NVIC_InitTypeDef tim4_NvicInit;
+    tim4_NvicInit.NVIC_IRQChannel = TIM4_IRQn;                       //中断频道
+    tim4_NvicInit.NVIC_IRQChannelCmd = ENABLE;
+    tim4_NvicInit.NVIC_IRQChannelPreemptionPriority = 2;     //抢占优先级，主优先级
+    tim4_NvicInit.NVIC_IRQChannelSubPriority = 0;            //提交优先级，次优先级
+    NVIC_Init(&tim4_NvicInit);
+}
+
+void TIM3_IRQHandler(){
+    tim3_counte ++;
+    if(tim3_counte == tim3_t){
+        TIM_Cmd(TIM3, DISABLE);
+        tim3_counte = 0;
+    }
+    TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
+}
+
+void TIM4_IRQHandler(){
+    tim4_counte ++;
+    if(tim4_counte == tim4_t){
+        TIM_Cmd(TIM4, DISABLE);
+        tim4_counte = 0;
+    }
+    TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
 }

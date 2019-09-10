@@ -32,6 +32,7 @@
         "stm32f4xx_hal.h": "c",
         "stm32f4xx_hal_conf.h": "c",
         "stm32f4xx_flash.h": "c",
-        "stem.h": "c"
+        "stem.h": "c",
+        "rtc.h": "c"
     }
 }

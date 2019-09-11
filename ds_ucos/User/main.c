@@ -91,6 +91,7 @@ void init_task(void* args){
 
   OSTaskDel(0, &P);
   osError_hander(P);
+  
 }
 
 void LED_task(void* args){

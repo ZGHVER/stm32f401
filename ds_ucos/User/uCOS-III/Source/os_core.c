@@ -794,7 +794,7 @@ void  OS_IdleTask (void  *p_arg)
     (void)&p_arg;                                           /* Prevent compiler warning for not using 'p_arg'         */
 
     while (DEF_ON) {
-        CPU_CRITICAL_ENTER();
+        CPU_CRITICAL_ENTER(); 
         OSIdleTaskCtr++;
 #if OS_CFG_STAT_TASK_EN > 0u
         OSStatTaskCtr++;

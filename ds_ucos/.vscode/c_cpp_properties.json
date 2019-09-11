@@ -10,7 +10,8 @@
                 "UNICODE",
                 "_UNICODE",
                 "STM32F401xx",
-                "USE_STDPERIPH_DRIVER"
+                "USE_STDPERIPH_DRIVER",
+                "__CC_ARM"
             ],
             "windowsSdkVersion": "10.0.17763.0",
             "cStandard": "c11",

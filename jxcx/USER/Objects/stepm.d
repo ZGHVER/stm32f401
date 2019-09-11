@@ -1,5 +1,5 @@
 .\objects\stepm.o: STEPM.c
-.\objects\stepm.o: STEM.h
+.\objects\stepm.o: STEPM.h
 .\objects\stepm.o: stm32f4xx_conf.h
 .\objects\stepm.o: ..\FWLIB\inc\stm32f4xx_adc.h
 .\objects\stepm.o: ..\USER\stm32f4xx.h

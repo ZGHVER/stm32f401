@@ -2,8 +2,7 @@
 #define __OLED_H			  	 
 #include "stdlib.h"	  
 #include "PinDef.h"  
-#include"stm32f4xx.h" 	
-#include"delay.h"
+#include "stm32f4xx.h" 	
 
 #define OLED_MODE 	0 
 		    						  

@@ -290,9 +290,9 @@ CPU_INT32U  BSP_CPU_ClkFreq (void)
 * Note(s)     : none.
 *********************************************************************************************************
 */
-
 void  BSP_Tick_Init (void)
 {
+
     CPU_INT32U  cpu_clk_freq;
     CPU_INT32U  cnts;
     

@@ -336,7 +336,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_STDPERIPH_DRIVER,STM32F401xx,</Define>
+              <Define>USE_STDPERIPH_DRIVER,STM32F401xx</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\Libraries\CMSIS\Device\ST\STM32F4xx\Include;..\..\Libraries\CMSIS\Include;..\..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\..\User;..\..\User\APP;..\..\User\BSP;..\..\User\BSP\led;..\..\User\uC-CPU;..\..\User\uC-CPU\ARM-Cortex-M4\RealView;..\..\User\uC-LIB;..\..\User\uCOS-III\Source;..\..\User\uCOS-III\Ports\ARM-Cortex-M4\Generic\RealView;..\..\User\BSP\key</IncludePath>
             </VariousControls>
@@ -771,11 +771,6 @@
           <GroupName>APP</GroupName>
           <Files>
             <File>
-              <FileName>app.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\APP\app.c</FilePath>
-            </File>
-            <File>
               <FileName>app_cfg.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\User\APP\app_cfg.h</FilePath>
@@ -815,6 +810,16 @@
               <FileType>5</FileType>
               <FilePath>..\..\User\APP\os_cfg_app.h</FilePath>
             </File>
+            <File>
+              <FileName>APP_OLED.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\MY_APP\APP_OLED.c</FilePath>
+            </File>
+            <File>
+              <FileName>APP_SCALES.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\MY_APP\APP_SCALES.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -826,9 +831,34 @@
               <FilePath>..\..\User\BSP\bsp.c</FilePath>
             </File>
             <File>
-              <FileName>bsp.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\User\BSP\bsp.h</FilePath>
+              <FileName>JDY.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\BSP\JDY\JDY.c</FilePath>
+            </File>
+            <File>
+              <FileName>oled.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\BSP\OLED\oled.c</FilePath>
+            </File>
+            <File>
+              <FileName>rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\BSP\RTC\rtc.c</FilePath>
+            </File>
+            <File>
+              <FileName>SCALES.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\BSP\SCALES\SCALES.c</FilePath>
+            </File>
+            <File>
+              <FileName>STEPM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\BSP\STEPM\STEPM.c</FilePath>
+            </File>
+            <File>
+              <FileName>app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\app.c</FilePath>
             </File>
           </Files>
         </Group>

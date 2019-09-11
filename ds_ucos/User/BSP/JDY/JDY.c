@@ -1,6 +1,7 @@
 
-#include"JDY.h"
-#include"oled.h"
+#include "JDY.h"
+#include "./BSP/OLED/oled.h"
+#include "./BSP/JDY/JDY.h"
 // VCC RXD TXD SET CS GND 
 
 volatile uint8_t temp_String[40];

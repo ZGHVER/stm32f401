@@ -3,7 +3,6 @@
 #include "oledfont.h"
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_gpio.h"
-#include "delay.h"
 
 u8 OLED_GRAM[128][8];
 
@@ -166,6 +165,11 @@ void OLED_ShowString(u8 x, u8 y, const u8 *p, u8 size)
 	}
 }
 
+
+void delayt(uint16_t de){
+	while(de--);
+}
+
 void OLED_Init(void)
 {
 	//c5 b5 14 13
@@ -187,8 +191,7 @@ void OLED_Init(void)
 	OLED_RS = 1;
 
 	OLED_RST = 0;
-
-	delay_ms(100);
+	delayt(0xfff);
 	OLED_RST = 1;
 
 	OLED_WR_Byte(0xAE, OLED_CMD); //�ر���ʾ

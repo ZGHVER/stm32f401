@@ -2,7 +2,7 @@
 #include "oled.h"
 #include "delay.h"
 #include "JDY.h"
-#include "STEM.h"
+#include "STEPM.h"
 #include "PinDef.h"
 #include "SCALES.h"
 #include "rtc.h"

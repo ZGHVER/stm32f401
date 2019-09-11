@@ -29,6 +29,6 @@
 .\objects\jdy.o: ..\FWLIB\inc\stm32f4xx_wwdg.h
 .\objects\jdy.o: ..\FWLIB\inc\misc.h
 .\objects\jdy.o: PinDef.h
-.\objects\jdy.o: ..\TOOL\OLED\oled.h
+.\objects\jdy.o: oled.h
 .\objects\jdy.o: D:\K5\ARM\ARMCC\Bin\..\include\stdlib.h
 .\objects\jdy.o: ..\SYSTEM\delay\delay.h

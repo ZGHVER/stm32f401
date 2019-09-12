@@ -28,15 +28,13 @@ void OLED_Start(){
         (  OS_ERR*   )&err                                        //¥ÌŒÛ±‰¡ø
     );
     osError_hander(err);
-
-    osError_hander(err);
 }
 
 void OLED_REFRE(void* p_args){
     OS_ERR err;
     while(1){
         OLED_Refresh_Gram();
-        OSTimeDly(250, OS_OPT_TIME_DLY, &err);
+        OSTimeDly(10, OS_OPT_TIME_DLY, &err);
         osError_hander(err);
     }
 }

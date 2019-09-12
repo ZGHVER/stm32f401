@@ -19,8 +19,88 @@ void OLED_Refresh_Gram(void)
 	}
 }
 
-void OLED_WR_Byte(u8 dat, u8 cmd)
-{
+#if OLED_IIC 
+
+#define high 1
+#define low 0
+
+uint8_t i = 0x55;
+void delaydd(){
+	while(i--){
+	}
+   i = 0x55;
+}
+
+void IIC_Start(){
+   SCL = high;
+   delaydd();
+   SDA = high;
+   delaydd();
+   SDA = low;
+   SCL = low;
+}
+
+void IIC_Stop(){
+   SDA = low;
+   delaydd();
+   SCL = high;
+   delaydd();
+   delaydd();
+   SDA = high;
+}
+
+uint8_t Write_IIC_Byte(unsigned char IIC_Byte){
+	unsigned char i;
+	for(i=0;i<8;i++)		
+	{
+		if(IIC_Byte & 0x80)		//1?0?
+		SDA=high;
+		else
+		SDA=low;
+		delaydd();
+		SCL=high;
+		delaydd();
+		delaydd();
+		SCL=low;
+		delaydd();
+		IIC_Byte<<=1;			//loop
+	}
+	 SDA = high;		                //ÊÍ·ÅIIC SDA×ÜÏßÎªÖ÷Æ÷¼þ½ÓÊÕ´ÓÆ÷¼þ²úÉúÓ¦´ðÐÅºÅ	
+	delaydd();
+	delaydd();
+	SCL = high;                     //µÚ9¸öÊ±ÖÓÖÜÆÚ
+	delaydd();
+	delaydd();
+	uint8_t Ack_Bit  = SDA;		            //¶ÁÈ¡Ó¦´ðÐÅºÅ
+	SCL = low;
+	return Ack_Bit;	
+}  
+
+void Write_IIC_Command(unsigned char IIC_Command){
+   IIC_Start();
+   Write_IIC_Byte(0x78);            //Slave address,SA0=0
+   Write_IIC_Byte(0x00);			//write command
+   Write_IIC_Byte(IIC_Command); 
+   IIC_Stop();
+}
+
+void Write_IIC_Data(unsigned char IIC_Data){
+   IIC_Start();
+   Write_IIC_Byte(0x78);			
+   Write_IIC_Byte(0x40);			//write data
+   Write_IIC_Byte(IIC_Data);
+   IIC_Stop(); 
+}
+
+void OLED_WR_Byte(u8 dat, u8 cmd){
+	if(cmd == OLED_CMD)
+		Write_IIC_Command(dat);
+	else if(cmd == OLED_DATA)	
+		Write_IIC_Data(dat);
+}
+#else
+
+void OLED_WR_Byte(u8 dat, u8 cmd){
 	u8 i;
 	OLED_RS = cmd; //Ð´ï¿½ï¿½ï¿½ï¿½
 	for (i = 0; i < 8; i++)
@@ -35,6 +115,8 @@ void OLED_WR_Byte(u8 dat, u8 cmd)
 	}
 	OLED_RS = 1;
 }
+
+#endif
 
 void OLED_Display_On(void)
 {
@@ -173,6 +255,49 @@ void delayt(uint16_t de){
 void OLED_Init(void)
 {
 	//c5 b5 14 13
+	#if OLED_IIC
+
+	GPIO_InitTypeDef ioC;
+	ioC.GPIO_Pin = GPIO_Pin_15;
+	ioC.GPIO_Mode = GPIO_Mode_OUT;
+	ioC.GPIO_OType = GPIO_OType_PP;
+	ioC.GPIO_PuPd = GPIO_PuPd_UP;
+	ioC.GPIO_Speed = GPIO_Speed_50MHz;
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
+	GPIO_Init(GPIOC, &ioC);
+	GPIO_Init(GPIOB, &ioC);
+
+	OLED_WR_Byte(0xae, OLED_CMD);
+	OLED_WR_Byte(0x20, OLED_CMD);
+	OLED_WR_Byte(0x10, OLED_CMD);
+	OLED_WR_Byte(0xAE, OLED_CMD);
+	OLED_WR_Byte(0xb0, OLED_CMD);
+	OLED_WR_Byte(0xc8, OLED_CMD);
+	OLED_WR_Byte(0x00, OLED_CMD);
+	OLED_WR_Byte(0x10, OLED_CMD);
+	OLED_WR_Byte(0x40, OLED_CMD);
+	OLED_WR_Byte(0x81, OLED_CMD);
+	OLED_WR_Byte(0x7f, OLED_CMD);
+	OLED_WR_Byte(0xa1, OLED_CMD);
+	OLED_WR_Byte(0xa6, OLED_CMD);
+	OLED_WR_Byte(0xa8, OLED_CMD);
+	OLED_WR_Byte(0x3f, OLED_CMD);
+	OLED_WR_Byte(0xa4, OLED_CMD);
+	OLED_WR_Byte(0xd3, OLED_CMD);
+	OLED_WR_Byte(0x00, OLED_CMD);
+	OLED_WR_Byte(0xd5, OLED_CMD);
+	OLED_WR_Byte(0xf0, OLED_CMD);
+	OLED_WR_Byte(0xd9, OLED_CMD);//0xae 0x20 0x10 0xb0 0xc8 0x00 0x10 0x40
+	// 0x81 0x7f 0xa1 0xa6 0xa8 0x3f 0xa4 0xd3 0x00 0xd5 0xf0 0xd9 0x22 0xda 0x12 0xdb 0x20 0x8b 0x14 0xaf
+	OLED_WR_Byte(0x22, OLED_CMD);
+	OLED_WR_Byte(0xda, OLED_CMD);
+	OLED_WR_Byte(0x12, OLED_CMD);
+	OLED_WR_Byte(0xdb, OLED_CMD);
+	OLED_WR_Byte(0x20, OLED_CMD);
+	OLED_WR_Byte(0x8b, OLED_CMD);
+	OLED_WR_Byte(0x14, OLED_CMD);
+	OLED_WR_Byte(0xaf, OLED_CMD);
+	#else
 	GPIO_InitTypeDef ioC;
 	ioC.GPIO_Pin = GPIO_Pin_15;
 	ioC.GPIO_Mode = GPIO_Mode_OUT;
@@ -224,6 +349,7 @@ void OLED_Init(void)
 	OLED_WR_Byte(0xA6, OLED_CMD); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½Ê½;bit0:1,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾;0,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾
 	OLED_WR_Byte(0xAF, OLED_CMD); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾
 	OLED_Clear();
+	#endif
 }
 
 void OLED_ADDval(u8 x)

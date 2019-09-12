@@ -4,13 +4,22 @@
 #include "PinDef.h"  
 #include "stm32f4xx.h" 	
 
-#define OLED_MODE 	0 
-		    						  
+#define OLED_IIC 	0 
+
+#if OLED_IIC
+
+#define SCL         PCout(15)
+#define SDA         PDout(15)
+
+#else
+
 #define OLED_SCLK 	PCout(15)
 #define OLED_SDIN 	PBout(15)
 #define OLED_RST    PBout(14)	
 #define OLED_RS 	PBout(13)
-		     
+
+#endif
+
 #define OLED_CMD  	0		
 #define OLED_DATA 	1		
 

@@ -48,6 +48,7 @@ int main(void){
 }
 
 __STATIC_INLINE void LED_Start(){
+	 OS_ERR P;;
    OSTaskCreate(
       (  OS_TCB*   )&TCB_LED_task,                              //任务控制块
       ( CPU_CHAR*  )"task_name",                                //任务名
@@ -78,16 +79,15 @@ void init_task(void* args){
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
   GPIO_Init(GPIOC, &ioC);
 
-  OSSchedLock(&P);
-  osError_hander(P);              //初始化任务，锁定调度器
+  __disable_irq();//开始初始化 关中断
 
   OLED_Start();
   SCALES_Start();
   LED_Start();
+  STEPM_Start();
   ADC_SoftwareStartConv(ADC1);
  
-  OSSchedUnlock(&P);              //初始化结束，开启调度器
-  osError_hander(P);
+  __enable_irq();//结束初始化 开中断
 
   OSTaskDel(0, &P);
   osError_hander(P);
@@ -99,7 +99,7 @@ void LED_task(void* args){
   uint16_t i = 0;
 
   while(1){
-    OSTimeDly(250, OS_OPT_TIME_DLY, &err);
+    OSTimeDly(100, OS_OPT_TIME_DLY, &err);
     osError_hander(err);
     GPIOC->ODR ^= GPIO_Pin_13;
     OLED_ShowNum(0, 0, i++, 12, 12);

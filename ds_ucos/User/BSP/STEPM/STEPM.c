@@ -1,9 +1,11 @@
 #include "STEPM.h"
+#include "os.h"
+#include"core_cm4.h"
 
-static __IO uint16_t tim3_counte = 0;
-static uint16_t tim3_t = 2048;
-static __IO uint16_t tim4_counte = 0;
-static uint16_t tim4_t = 1500;
+__IO uint16_t tim3_counte = 0;
+__IO uint16_t tim3_t = 2048;
+__IO uint16_t tim4_counte = 0;
+__IO uint16_t tim4_t = 1500;
 
 void STEPM_Init(){
     GPIO_InitTypeDef ioB;
@@ -65,20 +67,4 @@ void STEPM_Init(){
     NVIC_Init(&tim4_NvicInit);
 }
 
-void TIM3_IRQHandler(){
-    tim3_counte ++;
-    if(tim3_counte == tim3_t){
-        TIM_Cmd(TIM3, DISABLE);
-        tim3_counte = 0;
-    }
-    TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
-}
 
-void TIM4_IRQHandler(){
-    tim4_counte ++;
-    if(tim4_counte == tim4_t){
-        TIM_Cmd(TIM4, DISABLE);
-        tim4_counte = 0;
-    }
-    TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
-}

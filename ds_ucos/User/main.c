@@ -21,7 +21,6 @@ int main(void){
   OS_ERR P;
   CPU_Init();
   BSP_Tick_Init();
-
   OSInit(&P);
   osError_hander(P);
   
@@ -91,7 +90,35 @@ void init_task(void* args){
 
   OSTaskDel(0, &P);
   osError_hander(P);
-  
+
+  GPIO_InitTypeDef ioB;
+  ioB.GPIO_Pin = GPIO_Pin_7 | GPIO_Pin_8;
+  ioB.GPIO_Mode = GPIO_Mode_AF;
+  ioB.GPIO_OType = GPIO_OType_PP;
+  ioB.GPIO_PuPd = GPIO_PuPd_UP;
+  ioB.GPIO_Speed = GPIO_Speed_2MHz;
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
+  GPIO_Init(GPIOB, &ioB);
+
+  GPIO_PinAFConfig(GPIOB, GPIO_PinSource7, GPIO_AF_I2C1);
+  GPIO_PinAFConfig(GPIOB, GPIO_PinSource8, GPIO_AF_I2C1);
+
+
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, ENABLE);
+  I2C_InitTypeDef i2c1;
+  i2c1.I2C_Mode = I2C_Mode_I2C;
+  i2c1.I2C_Ack = I2C_Ack_Enable;
+  i2c1.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
+  i2c1.I2C_ClockSpeed = 200000;
+  i2c1.I2C_DutyCycle = I2C_DutyCycle_2;
+  i2c1.I2C_OwnAddress1 = 0x0A;
+  I2C_Init(I2C1, &i2c1);
+  I2C_AcknowledgeConfig(I2C1, ENABLE);
+  I2C_Cmd(I2C1, ENABLE);
+
+  I2C_SendData();
+  I2C_GetFlagStatus();
+  I2C_FLAG_BTF
 }
 
 void LED_task(void* args){
@@ -99,6 +126,7 @@ void LED_task(void* args){
   uint16_t i = 0;
 
   while(1){
+
     OSTimeDly(100, OS_OPT_TIME_DLY, &err);
     osError_hander(err);
     GPIOC->ODR ^= GPIO_Pin_13;
